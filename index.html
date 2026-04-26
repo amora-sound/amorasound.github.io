@@ -1,0 +1,1116 @@
+<!doctype html>
+<html lang="ru">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Amora Sound — Персональная песня на заказ</title>
+        <style>
+            :root {
+                --bg: #05070c;
+                --bg2: #0b1320;
+                --glass: rgba(255, 255, 255, 0.1);
+                --glass-strong: rgba(255, 255, 255, 0.14);
+                --line: rgba(255, 255, 255, 0.18);
+                --text: rgba(255, 255, 255, 0.96);
+                --muted: rgba(226, 233, 243, 0.72);
+                --gold: #d8b46a;
+                --gold2: #f4ddaa;
+                --pink: #ffb0dd;
+                --blue: #8bdcff;
+                --ok: #64f0a5;
+                --shadow: 0 24px 80px rgba(0, 0, 0, 0.38);
+            }
+            * {
+                box-sizing: border-box;
+            }
+            html {
+                scroll-behavior: smooth;
+            }
+            body {
+                margin: 0;
+                font-family:
+                    Inter,
+                    ui-sans-serif,
+                    system-ui,
+                    -apple-system,
+                    Segoe UI,
+                    Roboto,
+                    Arial,
+                    sans-serif;
+                color: var(--text);
+                min-height: 100vh;
+                background:
+                    radial-gradient(
+                        900px 620px at 12% 8%,
+                        rgba(139, 220, 255, 0.2),
+                        transparent 45%
+                    ),
+                    radial-gradient(
+                        900px 600px at 88% 12%,
+                        rgba(244, 221, 170, 0.16),
+                        transparent 42%
+                    ),
+                    radial-gradient(
+                        800px 520px at 50% 100%,
+                        rgba(255, 176, 221, 0.1),
+                        transparent 45%
+                    ),
+                    linear-gradient(
+                        180deg,
+                        #03060a 0%,
+                        #08111a 42%,
+                        #04070c 100%
+                    );
+                overflow-x: hidden;
+                position: relative;
+                isolation: isolate;
+            }
+            body::before {
+                content: "";
+                position: fixed;
+                inset: -20%;
+                pointer-events: none;
+                background:
+                    radial-gradient(
+                        circle at 20% 20%,
+                        rgba(139, 220, 255, 0.2),
+                        transparent 28%
+                    ),
+                    radial-gradient(
+                        circle at 80% 30%,
+                        rgba(244, 221, 170, 0.16),
+                        transparent 26%
+                    ),
+                    radial-gradient(
+                        circle at 50% 80%,
+                        rgba(255, 176, 221, 0.12),
+                        transparent 30%
+                    ),
+                    radial-gradient(
+                        circle at 35% 60%,
+                        rgba(255, 255, 255, 0.08),
+                        transparent 18%
+                    );
+                filter: blur(16px);
+                opacity: 0.8;
+                animation: bgDrift 18s ease-in-out infinite alternate;
+                z-index: -2;
+            }
+            body::after {
+                content: "";
+                position: fixed;
+                inset: 0;
+                pointer-events: none;
+                background:
+                    linear-gradient(
+                        120deg,
+                        rgba(255, 255, 255, 0.08),
+                        transparent 28%,
+                        rgba(255, 255, 255, 0.04) 52%,
+                        transparent 78%
+                    ),
+                    radial-gradient(
+                        circle at 50% 0%,
+                        rgba(255, 255, 255, 0.06),
+                        transparent 34%
+                    );
+                opacity: 0.55;
+                z-index: -1;
+            }
+            .wrap {
+                max-width: 1100px;
+                margin: 0 auto;
+                padding: 24px;
+            }
+            .nav {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 16px;
+                flex-wrap: wrap;
+                margin-bottom: 18px;
+            }
+            .brand {
+                font-weight: 900;
+                letter-spacing: -0.04em;
+                font-size: 20px;
+            }
+            .navlinks {
+                display: flex;
+                gap: 10px;
+                flex-wrap: wrap;
+            }
+            .pill {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                padding: 10px 14px;
+                border-radius: 999px;
+                border: 1px solid rgba(255, 255, 255, 0.16);
+                background: rgba(255, 255, 255, 0.08);
+                color: var(--text);
+                text-decoration: none;
+                font-weight: 700;
+                backdrop-filter: blur(18px) saturate(180%);
+                -webkit-backdrop-filter: blur(18px) saturate(180%);
+                transition:
+                    transform 0.2s ease,
+                    background 0.2s ease,
+                    border-color 0.2s ease;
+            }
+            .pill:hover {
+                transform: translateY(-2px);
+                background: rgba(255, 255, 255, 0.12);
+                border-color: rgba(255, 255, 255, 0.24);
+            }
+            h1 {
+                font-size: clamp(36px, 6vw, 64px);
+                line-height: 1.03;
+                margin: 18px 0 14px;
+                letter-spacing: -0.05em;
+            }
+            .sub {
+                font-size: clamp(16px, 2vw, 20px);
+                color: var(--muted);
+                max-width: 760px;
+            }
+            .grid {
+                display: grid;
+                grid-template-columns: 1.15fr 0.85fr;
+                gap: 22px;
+                margin-top: 26px;
+            }
+            .card {
+                position: relative;
+                overflow: hidden;
+                background: linear-gradient(
+                    180deg,
+                    rgba(255, 255, 255, 0.14),
+                    rgba(255, 255, 255, 0.07)
+                );
+                border: 1px solid rgba(255, 255, 255, 0.18);
+                border-radius: 30px;
+                padding: 24px;
+                box-shadow:
+                    0 18px 50px rgba(0, 0, 0, 0.28),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+                backdrop-filter: blur(28px) saturate(180%);
+                -webkit-backdrop-filter: blur(28px) saturate(180%);
+            }
+            .card::before {
+                content: "";
+                position: absolute;
+                inset: 0;
+                background:
+                    linear-gradient(
+                        135deg,
+                        rgba(255, 255, 255, 0.2),
+                        transparent 26%,
+                        transparent 70%,
+                        rgba(255, 255, 255, 0.08)
+                    ),
+                    radial-gradient(
+                        circle at top left,
+                        rgba(139, 220, 255, 0.1),
+                        transparent 35%
+                    );
+                pointer-events: none;
+            }
+            .card > * {
+                position: relative;
+                z-index: 1;
+            }
+            .card h2 {
+                margin: 0 0 10px;
+                font-size: 24px;
+            }
+            .card h3 {
+                margin: 0 0 10px;
+            }
+            .card p {
+                color: var(--muted);
+                margin: 0 0 12px;
+            }
+            .hero-box {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 14px;
+                margin-top: 18px;
+            }
+            .mini {
+                padding: 16px;
+                border: 1px solid rgba(255, 255, 255, 0.12);
+                border-radius: 20px;
+                background: rgba(255, 255, 255, 0.07);
+                backdrop-filter: blur(18px) saturate(180%);
+                -webkit-backdrop-filter: blur(18px) saturate(180%);
+                transition:
+                    transform 0.2s ease,
+                    background 0.2s ease;
+            }
+            .mini:hover {
+                transform: translateY(-3px);
+                background: rgba(255, 255, 255, 0.1);
+            }
+            .mini .k {
+                font-size: 13px;
+                color: var(--gold2);
+                text-transform: uppercase;
+                letter-spacing: 0.12em;
+                margin-bottom: 8px;
+            }
+            .mini .v {
+                font-size: 18px;
+                line-height: 1.35;
+            }
+            label {
+                display: block;
+                font-size: 14px;
+                color: #dfe7f3;
+                margin: 14px 0 8px;
+            }
+            input,
+            select,
+            textarea {
+                width: 100%;
+                padding: 13px 14px;
+                border-radius: 14px;
+                border: 1px solid rgba(255, 255, 255, 0.16);
+                background: rgba(255, 255, 255, 0.09);
+                color: var(--text);
+                outline: none;
+                font-size: 15px;
+                backdrop-filter: blur(18px) saturate(180%);
+                -webkit-backdrop-filter: blur(18px) saturate(180%);
+                transition:
+                    border-color 0.2s ease,
+                    box-shadow 0.2s ease,
+                    background 0.2s ease;
+            }
+            select {
+                appearance: none;
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                background-image:
+                    linear-gradient(45deg, transparent 50%, var(--gold2) 50%),
+                    linear-gradient(135deg, var(--gold2) 50%, transparent 50%);
+                background-position:
+                    calc(100% - 20px) 50%,
+                    calc(100% - 14px) 50%;
+                background-size:
+                    6px 6px,
+                    6px 6px;
+                background-repeat: no-repeat;
+                padding-right: 40px;
+            }
+            select option {
+                background: #2b2f36;
+                color: #ffffff;
+            }
+            select option:checked,
+            select option:hover,
+            select option:focus {
+                background: #3a4049;
+                color: #ffffff;
+            }
+            input::placeholder,
+            textarea::placeholder {
+                color: #9aa6b6;
+            }
+            input:focus,
+            select:focus,
+            textarea:focus {
+                border-color: rgba(244, 221, 170, 0.8);
+                box-shadow: 0 0 0 4px rgba(216, 180, 106, 0.14);
+                background: rgba(255, 255, 255, 0.12);
+            }
+            textarea {
+                min-height: 110px;
+                resize: vertical;
+            }
+            .two {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 14px;
+            }
+            .btns {
+                display: flex;
+                gap: 12px;
+                flex-wrap: wrap;
+                margin-top: 16px;
+            }
+            button,
+            .ghost,
+            .btn.primary,
+            .btn.secondary {
+                border: 0;
+                border-radius: 14px;
+                padding: 13px 18px;
+                font-weight: 700;
+                font-size: 15px;
+                cursor: pointer;
+                text-decoration: none;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                transition:
+                    transform 0.2s ease,
+                    box-shadow 0.2s ease,
+                    background 0.2s ease;
+            }
+            button,
+            .btn.primary {
+                background: linear-gradient(
+                    135deg,
+                    rgba(244, 221, 170, 1),
+                    rgba(216, 180, 106, 1)
+                );
+                color: #081018;
+                box-shadow: 0 12px 30px rgba(216, 180, 106, 0.22);
+            }
+            .ghost,
+            .btn.secondary {
+                background: rgba(255, 255, 255, 0.07);
+                border: 1px solid rgba(255, 255, 255, 0.14);
+                color: var(--text);
+                backdrop-filter: blur(18px) saturate(180%);
+                -webkit-backdrop-filter: blur(18px) saturate(180%);
+            }
+            button:hover,
+            .btn.primary:hover,
+            .ghost:hover,
+            .btn.secondary:hover {
+                transform: translateY(-2px);
+            }
+            button:active,
+            .btn.primary:active,
+            .ghost:active,
+            .btn.secondary:active,
+            .pill:active {
+                transform: translateY(0) scale(0.99);
+            }
+            .ok {
+                color: var(--ok);
+                font-weight: 700;
+                margin-top: 10px;
+                min-height: 22px;
+            }
+            .small {
+                font-size: 13px;
+                color: var(--muted);
+            }
+            .footer {
+                margin: 22px 0 8px;
+                color: var(--muted);
+                font-size: 13px;
+            }
+            .section {
+                margin-top: 26px;
+            }
+            .note {
+                padding: 14px 16px;
+                border-radius: 16px;
+                background: rgba(255, 255, 255, 0.07);
+                border: 1px solid rgba(255, 255, 255, 0.12);
+                backdrop-filter: blur(18px) saturate(180%);
+                -webkit-backdrop-filter: blur(18px) saturate(180%);
+            }
+            ul {
+                color: var(--muted);
+            }
+            .price {
+                display: inline-block;
+                padding: 8px 12px;
+                border-radius: 999px;
+                background: rgba(216, 180, 106, 0.14);
+                border: 1px solid rgba(216, 180, 106, 0.22);
+                color: var(--gold2);
+                font-weight: 800;
+                margin-top: 8px;
+            }
+            .faq {
+                display: grid;
+                gap: 12px;
+                margin-top: 16px;
+            }
+            .faq details {
+                border: 1px solid rgba(255, 255, 255, 0.12);
+                border-radius: 18px;
+                background: rgba(255, 255, 255, 0.07);
+                backdrop-filter: blur(18px) saturate(180%);
+                -webkit-backdrop-filter: blur(18px) saturate(180%);
+                overflow: hidden;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.16);
+            }
+            .faq summary {
+                list-style: none;
+                cursor: pointer;
+                padding: 16px 18px;
+                font-weight: 800;
+                color: var(--text);
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
+            }
+            .faq summary::-webkit-details-marker {
+                display: none;
+            }
+            .faq summary::after {
+                content: "+";
+                width: 30px;
+                height: 30px;
+                display: grid;
+                place-items: center;
+                border-radius: 999px;
+                background: rgba(255, 255, 255, 0.08);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                color: var(--gold2);
+                flex: 0 0 auto;
+                transition:
+                    transform 0.2s ease,
+                    background 0.2s ease;
+            }
+            .faq details[open] summary::after {
+                content: "−";
+                background: rgba(244, 221, 170, 0.12);
+            }
+            .faq-body {
+                padding: 0 18px 18px;
+                color: var(--muted);
+            }
+            .faq-body p {
+                margin: 0 0 10px;
+            }
+            .faq-body p:last-child {
+                margin-bottom: 0;
+            }
+            .faq a {
+                color: var(--gold2);
+            }
+            .faq details[open] {
+                border-color: rgba(244, 221, 170, 0.22);
+            }
+            @keyframes bgDrift {
+                0% {
+                    transform: translate3d(-1.5%, -1%, 0) scale(1);
+                    filter: hue-rotate(0deg) blur(16px);
+                }
+                50% {
+                    transform: translate3d(1.2%, 1.5%, 0) scale(1.04);
+                    filter: hue-rotate(10deg) blur(18px);
+                }
+                100% {
+                    transform: translate3d(-0.8%, 0.8%, 0) scale(1.02);
+                    filter: hue-rotate(-6deg) blur(17px);
+                }
+            }
+
+            /* --- ТОЛЬКО ДОБАВЛЕННЫЕ СТИЛИ АНИМАЦИИ ТЕКСТА --- */
+            .bg-marquee {
+                position: fixed;
+                top: 45%;
+                left: 0;
+                width: 1000%; /* Ширина для бесконечного цикла */
+                font-size: 18vw;
+                font-weight: 900;
+                color: transparent;
+                -webkit-text-stroke: 1px rgba(255, 255, 255, 0.04);
+                white-space: nowrap;
+                z-index: -1;
+                pointer-events: none;
+                text-transform: uppercase;
+                animation: marqueeFlow 60s linear infinite;
+            }
+            @keyframes marqueeFlow {
+                0% {
+                    transform: translateX(0);
+                }
+                100% {
+                    transform: translateX(-50%);
+                }
+            }
+            /* ----------------------------------------------- */
+
+            @media (max-width: 900px) {
+                .grid,
+                .hero-box,
+                .two {
+                    grid-template-columns: 1fr;
+                }
+                .wrap {
+                    padding: 18px;
+                }
+                .card {
+                    padding: 18px;
+                    border-radius: 24px;
+                }
+                .nav {
+                    align-items: flex-start;
+                }
+                .navlinks {
+                    gap: 8px;
+                }
+                .pill {
+                    padding: 9px 12px;
+                }
+                h1 {
+                    font-size: clamp(30px, 10vw, 54px);
+                }
+                .btns {
+                    flex-direction: column;
+                }
+                .btns > * {
+                    width: 100%;
+                }
+            }
+            @media (prefers-reduced-motion: reduce) {
+                *,
+                *::before,
+                *::after {
+                    animation: none !important;
+                    transition: none !important;
+                    scroll-behavior: auto !important;
+                }
+            }
+            /* Анимация текста на фоне */
+            .bg-marquee {
+                position: fixed;
+                top: 48%;
+                left: 0;
+                white-space: nowrap;
+                font-size: 18vw;
+                font-weight: 900px;
+                color: transparent;
+                -webkit-text-stroke: 2px rgba(255, 255, 255, 0.06);
+                z-index: 5;
+                pointer-events: none;
+                user-select: none;
+                will-change: transform;
+                display: block !important;
+                /* Движение будет идти 20 секунд. Если слишком быстро - поставь 40s */
+                animation: marqueeFlow 50s linear infinite !important;
+            }
+
+            @keyframes marqueeFlow {
+                from {
+                    transform: translateX(0) translateY(-50%);
+                }
+                to {
+                    transform: translateX(-50%) translateY(-50%);
+                }
+            }
+            .support-chat {
+                            position: fixed;
+                            bottom: 30px;
+                            right: 30px;
+                            z-index: 9999;
+                            display: flex;
+                            align-items: center;
+                            gap: 12px;
+                            padding: 12px 20px;
+                            background: rgba(255, 255, 255, 0.08);
+                            border: 1px solid rgba(255, 255, 255, 0.16);
+                            border-radius: 999px;
+                            backdrop-filter: blur(15px) saturate(180%);
+                            -webkit-backdrop-filter: blur(15px) saturate(180%);
+                            color: var(--text);
+                            text-decoration: none;
+                            font-weight: 700;
+                            font-size: 15px;
+                            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+                            transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+                        }
+
+                        .support-chat:hover {
+                            transform: translateY(-5px) scale(1.03);
+                            background: rgba(255, 255, 255, 0.12);
+                            border-color: var(--gold);
+                            box-shadow: 0 20px 40px rgba(216, 180, 106, 0.2);
+                        }
+
+                        .support-chat .icon {
+                            width: 24px;
+                            height: 24px;
+                            background: var(--gold);
+                            border-radius: 50%;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            color: #000;
+                            font-size: 14px;
+                        }
+
+                        @media (max-width: 600px) {
+                            .support-chat span { display: none; } /* На мобилках оставляем только иконку */
+                            .support-chat { padding: 12px; border-radius: 50%; }
+                        }
+        </style>
+    </head>
+    <body>
+        
+        <!-- ТОЛЬКО ДОБАВЛЕННЫЙ БЛОК ТЕКСТА -->
+        <div class="bg-marquee">
+            AMORA SOUND • AMORA SOUND • AMORA SOUND • AMORA SOUND • AMORA SOUND
+            • AMORA SOUND • AMORA SOUND • AMORA SOUND •
+        </div>
+
+        <div class="wrap">
+            <header class="nav">
+                <div class="brand">Amora Sound</div>
+                <nav class="navlinks">
+                    <a class="pill" href="#about">О сервисе</a>
+                    <a class="pill" href="#order">Заказать</a>
+                    <a class="pill" href="#legal">Правовая информация</a>
+                </nav>
+            </header>
+
+            <main class="hero">
+                <section class="card">
+                    <h1>
+                        История превращается в песню, которая звучит именно про
+                        вас
+                    </h1>
+                    <p class="sub">
+                        Ты заполняешь форму, а мы создаём оригинальную песню с
+                        именами, моментами, городом, стилем и нужным вокалом.
+                        Идеально для подарка, признания, свадьбы или дня
+                        рождения.
+                    </p>
+                    <div class="btns">
+                        <a class="btn primary" href="#order"
+                            >Заполнить заявку</a
+                        >
+                        <a class="btn secondary" href="#legal"
+                            >Правовая информация</a
+                        >
+                    </div>
+                </section>
+
+                <aside class="card">
+                    <h3>Что входит</h3>
+                    <div class="grid" style="grid-template-columns: 1fr">
+                        <div class="mini">
+                            <b>Base — 1 490 ₽</b>
+                            <p class="small">
+                                Быстрый старт и базовая персонализация.
+                            </p>
+                        </div>
+                        <div class="mini">
+                            <b>Standard — 2 990 ₽</b>
+                            <p class="small">
+                                Больше деталей, эмоций и проработка текста.
+                            </p>
+                        </div>
+                        <div class="mini">
+                            <b>Premium — 5 990 ₽</b>
+                            <p class="small">
+                                Максимальная детализация и расширенная работа.
+                            </p>
+                        </div>
+                    </div>
+                </aside>
+            </main>
+
+            <section id="about" class="section">
+                <div class="card">
+                    <h2>О сервисе</h2>
+                    <div class="two">
+                        <div>
+                            <p>
+                                Amora Sound создаёт персональные песни по твоей
+                                истории, пожеланиям и выбранному стилю.
+                            </p>
+                            <p>
+                                Мы используем данные из заявки, чтобы сделать
+                                песню более личной и подходящей под повод.
+                            </p>
+                        </div>
+                        <div>
+                            <ul>
+                                <li>Имена, даты и значимые моменты.</li>
+                                <li>Выбор настроения и музыкального стиля.</li>
+                                <li>
+                                    Отправка результата в согласованный канал
+                                    связи.
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="order" class="section">
+                <div class="card">
+                    <h2>Оставить заявку</h2>
+                    <p>
+                        Заполни форму — это займёт 2–4 минуты. После отправки мы
+                        свяжемся с тобой в Telegram.
+                    </p>
+                    <form id="orderForm">
+                        <div class="two">
+                            <div>
+                                <label>Твоё имя</label
+                                ><input
+                                    id="name"
+                                    type="text"
+                                    placeholder="Алексей"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label>Telegram или email</label
+                                ><input
+                                    id="contact"
+                                    type="text"
+                                    placeholder="@username или email"
+                                    required
+                                />
+                            </div>
+                        </div>
+                        <div class="two">
+                            <div>
+                                <label>Для кого песня</label
+                                ><input
+                                    id="forWho"
+                                    type="text"
+                                    placeholder="Марина"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label>Повод</label
+                                ><select id="event">
+                                    <option>День рождения</option>
+                                    <option>Свадьба</option>
+                                    <option>Годовщина</option>
+                                    <option>Признание</option>
+                                    <option>Сюрприз</option>
+                                    <option>Другое</option>
+                                </select>
+                            </div>
+                        </div>
+                        <label>Кто дарит</label
+                        ><input
+                            id="fromWho"
+                            type="text"
+                            placeholder="От мужа, от сестры, от друзей..."
+                        />
+                        <label>3–5 важных фактов о человеке</label
+                        ><textarea
+                            id="facts"
+                            placeholder="Любит море, работает дизайнером, обожает котов..."
+                            required
+                        ></textarea>
+                        <label>Город или место</label
+                        ><input
+                            id="location"
+                            type="text"
+                            placeholder="Новосибирск, кафе, дом, пляж..."
+                        />
+                        <div class="two">
+                            <div>
+                                <label>Стиль музыки</label
+                                ><select id="style">
+                                    <option>Поп</option>
+                                    <option>Лирика</option>
+                                    <option>Рэп</option>
+                                    <option>Рок</option>
+                                    <option>Акустика</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label>Вокал</label
+                                ><select id="vocal">
+                                    <option>Мужской</option>
+                                    <option>Женский</option>
+                                    <option>Дуэт</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="two">
+                            <div>
+                                <label>Хор</label
+                                ><select id="chorus">
+                                    <option>Да</option>
+                                    <option>Нет</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label>Язык песни</label
+                                ><select id="lang">
+                                    <option>Русский</option>
+                                    <option>Английский</option>
+                                    <option>Другое</option>
+                                </select>
+                            </div>
+                        </div>
+                        <label>Пакет</label
+                        ><select id="package">
+                            <option>Base</option>
+                            <option>Standard</option>
+                            <option>Premium</option>
+                        </select>
+                        <label>Что обязательно должно быть в песне</label
+                        ><textarea
+                            id="mustHave"
+                            placeholder="Например: имя, шутка, момент знакомства"
+                        ></textarea>
+                        <label>Что нельзя использовать</label
+                        ><textarea
+                            id="mustNot"
+                            placeholder="Например: без мата, без грустного тона"
+                        ></textarea>
+                        <label>Комментарий</label
+                        ><textarea
+                            id="comment"
+                            placeholder="Любые дополнительные пожелания"
+                        ></textarea>
+                        <div class="btns">
+                            <button type="submit">Отправить заявку</button>
+                            <a class="btn secondary" href="#legal"
+                                >Перед отправкой прочитать условия</a
+                            >
+                        </div>
+                        <div class="ok" id="status"></div>
+                    </form>
+                </div>
+            </section>
+
+            <section id="legal" class="section legal">
+                <div class="card">
+                    <h2>Правовая информация</h2>
+                    <p>
+                        Ниже — основные условия работы, чтобы всё было понятно
+                        заранее и без скрытых моментов.
+                    </p>
+                    <div class="faq">
+                        <details>
+                            <summary>Оферта и порядок заказа</summary>
+                            <div class="faq-body">
+                                <p>
+                                    Заявка считается отправленной после
+                                    заполнения формы на сайте и нажатия кнопки
+                                    отправки. После получения заявки мы
+                                    связываемся с клиентом для уточнения
+                                    деталей, подтверждения состава заказа и
+                                    согласования дальнейших шагов.
+                                </p>
+                                <p>
+                                    Заказ считается принятым в работу после
+                                    подтверждения всех основных параметров:
+                                    пакета, темы, пожеланий, контакта для связи
+                                    и оплаты, если для выбранного сценария
+                                    требуется предоплата или полная оплата.
+                                </p>
+                            </div>
+                        </details>
+                        <details>
+                            <summary>Порядок оплаты и начала работы</summary>
+                            <div class="faq-body">
+                                <p>
+                                    Оплата производится по выбранному тарифу
+                                    через доступную платёжную ссылку или другой
+                                    согласованный способ оплаты. После оплаты мы
+                                    фиксируем заказ и начинаем работу над
+                                    персонализацией песни.
+                                </p>
+                                <p>
+                                    Началом выполнения заказа считается момент,
+                                    когда все ключевые данные получены и заказ
+                                    подтверждён, либо когда поступила оплата,
+                                    если она является обязательной частью
+                                    запуска работы.
+                                </p>
+                            </div>
+                        </details>
+                        <details>
+                            <summary>Сроки изготовления</summary>
+                            <div class="faq-body">
+                                <p>
+                                    Сроки зависят от объёма заявки, выбранного
+                                    пакета и сложности персонализации. Обычно
+                                    базовая работа выполняется быстрее, а более
+                                    детальные заказы требуют больше времени на
+                                    проработку текста и структуры песни.
+                                </p>
+                                <p>
+                                    Если заказ содержит много индивидуальных
+                                    пожеланий, срок может быть увеличен — в
+                                    таком случае мы заранее предупреждаем
+                                    клиента и согласовываем ожидания.
+                                </p>
+                            </div>
+                        </details>
+                        <details>
+                            <summary>Передача результата</summary>
+                            <div class="faq-body">
+                                <p>
+                                    Готовый результат отправляется в
+                                    согласованный канал связи: Telegram, email
+                                    или другой способ, который был указан в
+                                    заявке. Мы используем тот контакт, который
+                                    клиент оставил в форме.
+                                </p>
+                                <p>
+                                    Если требуется дополнительное согласование
+                                    или уточнение, мы связываемся с клиентом до
+                                    финальной передачи результата.
+                                </p>
+                            </div>
+                        </details>
+                        <details>
+                            <summary>Персональные данные</summary>
+                            <div class="faq-body">
+                                <p>
+                                    Мы можем собирать имя, контакт для связи,
+                                    сведения о поводе, имена, даты, город,
+                                    пожелания к песне и другие данные, которые
+                                    клиент добровольно указывает в заявке.
+                                </p>
+                                <p>
+                                    Эти данные используются только для
+                                    выполнения заказа, связи с клиентом,
+                                    персонализации текста и передачи готового
+                                    результата. Мы не используем их для
+                                    посторонних целей без необходимости.
+                                </p>
+                            </div>
+                        </details>
+                        <details>
+                            <summary>Отказ и возврат</summary>
+                            <div class="faq-body">
+                                <p>
+                                    Если работа ещё не начата, возможна отмена
+                                    заказа по согласованию сторон. Если работа
+                                    уже была начата, условия возврата зависят от
+                                    объёма выполненных действий и стадии
+                                    готовности материала.
+                                </p>
+                                <p>
+                                    Поскольку услуга является индивидуальной и
+                                    создаётся под конкретного клиента, итоговые
+                                    условия отмены и возврата согласуются
+                                    отдельно в каждом случае.
+                                </p>
+                            </div>
+                        </details>
+                        <details>
+                            <summary>Контакты для связи</summary>
+                            <div class="faq-body">
+                                <p>
+                                    Для связи используйте Telegram:
+                                    <b>@Amora_Sound</b>.
+                                </p>
+                                <p>
+                                    <p>Группа: <a href="https://t.me/amora_soundGroupe">https://t.me/amora_soundGroupe</a>.</p>
+                                </p>
+                                <p>
+                                    Мы работаем прозрачно и открыто, чтобы
+                                    клиент понимал, кто оказывает услугу и как с
+                                    нами связаться.
+                                </p>
+                            </div>
+                        </details>
+                    </div>
+                    <h3 style="margin-top: 22px">Реквизиты</h3>
+                    <p><b>Продавец: </b>Сергеев Леонид Олегович</p>
+                    <p><b>ИНН: </b>540962692000</p>
+                </div>
+            </section>
+
+            <footer class="footer">
+                <div>
+                    © 2026 Amora Sound · персональные песни на заказ · Все права
+                    защищены
+                </div>
+            </footer>
+        </div>
+
+        <a href="https://t.me/Amora_Support_Bot" target="_blank" class="support-chat">Поддержка</a>
+
+
+        <script>
+            const BOT_TOKEN = "8618380082:AAHmHLIXjvfd67KQpmTAL3nKku6gGIgKtig";
+            const CHAT_ID = "6441369901";
+            const paymentLinks = {
+                Base: "https://auth.robokassa.ru/merchant/Invoice/AWmtuJCPmUeJVoI_kf94Kg",
+                Standard: "https://auth.robokassa.ru/merchant/Invoice/LvbavvNfQUSuhGOp43pOWw",
+                Premium: "https://auth.robokassa.ru/merchant/Invoice/nofqpVfackW5_5c0z6qLJA",
+            };
+            const form = document.getElementById("orderForm");
+            const statusEl = document.getElementById("status");
+            form.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                const data = {
+                    name: document.getElementById("name").value.trim(),
+                    contact: document.getElementById("contact").value.trim(),
+                    forWho: document.getElementById("forWho").value.trim(),
+                    event: document.getElementById("event").value,
+                    fromWho: document.getElementById("fromWho").value.trim(),
+                    facts: document.getElementById("facts").value.trim(),
+                    location: document.getElementById("location").value.trim(),
+                    style: document.getElementById("style").value,
+                    vocal: document.getElementById("vocal").value,
+                    chorus: document.getElementById("chorus").value,
+                    lang: document.getElementById("lang").value,
+                    package: document.getElementById("package").value,
+                    mustHave: document.getElementById("mustHave").value.trim(),
+                    mustNot: document.getElementById("mustNot").value.trim(),
+                    comment: document.getElementById("comment").value.trim(),
+                };
+                const pay = paymentLinks[data.package];
+                if (!pay || pay.includes("PASTE_")) {
+                    statusEl.textContent =
+                        "Сначала вставь ссылки оплаты для Base / Standard / Premium.";
+                    return;
+                }
+                const text = [
+                    "Новая заявка",
+                    "",
+                    `Пакет: ${data.package}`,
+                    `Платёж: ${pay}`,
+                    `Имя: ${data.name}`,
+                    `Контакт: ${data.contact}`,
+                    `Для кого: ${data.forWho}`,
+                    `Повод: ${data.event}`,
+                    `Кто дарит: ${data.fromWho || "-"}`,
+                    `Факты: ${data.facts}`,
+                    `Место: ${data.location || "-"}`,
+                    `Стиль: ${data.style}`,
+                    `Вокал: ${data.vocal}`,
+                    `Хор: ${data.chorus}`,
+                    `Язык: ${data.lang}`,
+                    `Нужно включить: ${data.mustHave || "-"}`,
+                    `Нельзя использовать: ${data.mustNot || "-"}`,
+                    `Комментарий: ${data.comment || "-"}`,
+                ].join("\n");
+                try {
+                    statusEl.textContent = "Отправляю заявку...";
+                    const res = await fetch(
+                        `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,
+                        {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ chat_id: CHAT_ID, text }),
+                        },
+                    );
+                    const result = await res.json();
+                    if (result.ok) {
+                        statusEl.textContent =
+                            "Заявка отправлена! Переходим к оплате...";
+                        setTimeout(() => {
+                            window.location.href = pay;
+                        }, 700);
+                    } else {
+                        statusEl.textContent =
+                            "Ошибка Telegram: " +
+                            (result.description || "unknown");
+                    }
+                } catch (error) {
+                    statusEl.textContent = "Ошибка сети: " + error.message;
+                }
+            });
+        </script>
+    </body>
+</html>
